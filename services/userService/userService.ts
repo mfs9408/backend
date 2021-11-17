@@ -1,11 +1,10 @@
-export {};
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 const { v4: uuidv4 } = require("uuid");
-const UserModel = require("../../models/userModels");
-const MailService = require("../mailService/mailService");
-const tokenService = require("../tokenService/tokenService");
-const UserDto = require("../../dtos/userDto");
-const ApiError = require("../../errors/ApiErrors");
+import UserModel from "../../models/userModels";
+import MailService from "../mailService";
+import tokenService from "../tokenService";
+import UserDto from "../../dtos/userDto";
+import ApiError from "../../errors/ApiErrors";
 
 class UserService {
   async userRegistration(email: string, nickname: string, password: string) {
@@ -83,6 +82,7 @@ class UserService {
       throw ApiError.unAuthorizedError();
     }
 
+    //@ts-ignore TODO доработать типизацию.
     const user = await UserModel.findById(userData.id);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens(userDto);
@@ -92,4 +92,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+export default new UserService();

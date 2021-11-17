@@ -1,10 +1,7 @@
-export {};
 import { Request, Response, NextFunction } from "express";
-const { validationResult } = require("express-validator");
-const path = require("path");
-const { v4: uuidv4 } = require("uuid");
-const ApiError = require("../../errors/ApiErrors");
-const userService = require("../../services/userService/userService");
+import { validationResult } from "express-validator";
+import ApiError from "../../errors/ApiErrors";
+import userService from "../../services/userService/userService";
 
 class UserController {
   async userRegistration(req: Request, res: Response, next: NextFunction) {
@@ -48,7 +45,7 @@ class UserController {
   async activateAccount(req: Request, res: Response, next: NextFunction) {
     try {
       const activationLink = req.params.link;
-      await userService.activate(activationLink);
+      await userService.activateAccount(activationLink);
       return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
       next(e);
@@ -80,29 +77,7 @@ class UserController {
     }
   }
 
-  async userOptions(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { email, nickname, password } = req.body;
-
-      const { img } = req.files;
-
-      const usersAvatar = img ? uuidv4() + ".jpg" : "defaultAvatar.jpeg";
-
-      if ("mv" in img) {
-        await img.mv(
-          path.resolve(
-            __dirname,
-            "../../",
-            "static",
-            "userAvatars",
-            usersAvatar
-          )
-        );
-      }
-    } catch (e) {
-      next(e);
-    }
-  }
+  async userOptions(req: Request, res: Response, next: NextFunction) {}
 }
 
-module.exports = new UserController();
+export default new UserController();

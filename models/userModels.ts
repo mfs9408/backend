@@ -1,5 +1,4 @@
-export {};
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const UserSchema = new Schema({
   email: { type: String, unique: true, required: true },
@@ -7,8 +6,8 @@ const UserSchema = new Schema({
   password: { type: String, unique: false, required: true },
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
-  role: { type: String, default: "user" },
-  avatar: {type: String, default: 'defaultAvatar.jpeg' },
+  role: [{ type: String, default: "user" }],
+  avatar: { type: String, default: "defaultAvatar.jpeg" },
 });
 
-module.exports = model("User", UserSchema);
+export default model("User", UserSchema);

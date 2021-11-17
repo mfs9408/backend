@@ -1,10 +1,8 @@
-export {};
-const Router = require("express");
-const router = new Router();
-const userController = require("../../controllers/userController/userController");
-// const postController = require("../../controllers/postController/postController");
-const { body } = require("express-validator");
+import { Router } from "express";
+import { body } from "express-validator";
+import userController from "../../controllers/userController";
 
+const router = Router();
 router.post(
   "/registration",
   body("email").isEmail(),
@@ -16,6 +14,5 @@ router.post("/logout", userController.userLogout);
 router.get("/activate/:link", userController.activateAccount);
 router.get("/refresh", userController.refreshToken);
 router.get("/users");
-// router.get("/createPost", postController.createNewPost);
 
-module.exports = router;
+export default router;

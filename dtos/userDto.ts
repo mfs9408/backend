@@ -1,22 +1,15 @@
-export {};
+import { ModelInterface } from "../types";
 
-interface Model {
+export default class UserDto {
   email: string;
-  id: number;
-  role: string;
-  nickname?: string;
-}
-
-module.exports = class UserDto {
-  email: string;
-  id: number;
-  role: string;
+  id: string;
+  role: [string];
   nickname: string;
 
-  constructor({ email, id, role, nickname }: Model) {
+  constructor({ email, id, role, nickname }: ModelInterface) {
     this.email = email;
     this.id = id;
     this.role = role;
     this.nickname = nickname;
   }
-};
+}

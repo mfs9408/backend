@@ -1,18 +1,21 @@
-export {};
-const jwt = require("jsonwebtoken");
-const tokenModel = require("../../models/tokenModel");
+import jwt from "jsonwebtoken";
+import tokenModel from "../../models/tokenModel";
+import { ModelInterface } from "../../types";
 
 class TokenService {
-  generateTokens(email: string, nickname: string, role: string) {
+  generateTokens({ email, nickname, role }: ModelInterface) {
+    const rolesForToken = () => role.reduce((acc, role) => acc + role);
+
     const accessToken = jwt.sign(
-      { email, nickname, role },
+      { email, nickname, rolesForToken },
       process.env.JWT_ACCESS_SECRET,
       {
         expiresIn: "12h",
       }
     );
+
     const refreshToken = jwt.sign(
-      { email, nickname, role },
+      { email, nickname, rolesForToken },
       process.env.JWT_ACCESS_SECRET,
       {
         expiresIn: "30d",
@@ -27,22 +30,20 @@ class TokenService {
       tokenData.refreshToken = refreshToken;
       return tokenData.save();
     }
-    const token = await tokenModel.create({ user: userId, refreshToken });
-    return token;
+    return await tokenModel.create({ user: userId, refreshToken });
   }
 
   async removeToken(refreshToken: string) {
-    return await tokenModel.deleteOne({ refreshToken });
+    return tokenModel.deleteOne({ refreshToken });
   }
 
   async findToken(refreshToken: string) {
-    return await tokenModel.findOne({ refreshToken });
+    return tokenModel.findOne({ refreshToken });
   }
 
   async validateAccessToken(token: string) {
     try {
-      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-      return userData;
+      return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
     } catch (e) {
       return null;
     }
@@ -50,12 +51,11 @@ class TokenService {
 
   async validateRefreshToken(token: string) {
     try {
-      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-      return userData;
+      return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
     } catch (e) {
       return null;
     }
   }
 }
 
-module.exports = new TokenService();
+export default new TokenService();
