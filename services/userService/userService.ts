@@ -33,10 +33,9 @@ class UserService {
     );
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-    return { ...tokens, user: userDto };
+    return { tokens, user: userDto };
   }
 
   async activateAccount(activationLink: string) {
@@ -61,10 +60,10 @@ class UserService {
     }
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-    return { ...tokens, user: new UserDto(user) };
+    return { tokens, user: new UserDto(user) };
   }
 
   async userLogout(refreshToken: string) {
@@ -85,10 +84,10 @@ class UserService {
     //@ts-ignore TODO доработать типизацию.
     const user = await UserModel.findById(userData.id);
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-    return { ...tokens, user: new UserDto(user) };
+    return { tokens, user: new UserDto(user) };
   }
 }
 

@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   password: { type: String, unique: false, required: true },
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
-  role: [{ type: String, default: "user" }],
+  role: { type: Array, default: "user" },
   avatar: { type: String, default: "defaultAvatar.jpeg" },
 });
 

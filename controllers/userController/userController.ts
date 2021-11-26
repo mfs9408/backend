@@ -11,14 +11,14 @@ class UserController {
         return next(ApiError.badRequest("Validation mistake"));
       }
 
-      const { email, nickname, password } = req.body;
+      const { email, nickname, password } = req.body.payload;
 
       const userData = await userService.userRegistration(
         email,
         nickname,
         password
       );
-      res.cookie("refreshToken", userData.refreshToken, {
+      res.cookie("refreshToken", userData.tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
@@ -32,7 +32,7 @@ class UserController {
     try {
       const { email, password } = req.body;
       const userData = await userService.userAuthorization(email, password);
-      res.cookie("refreshToken", userData.refreshToken, {
+      res.cookie("refreshToken", userData.tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
@@ -67,11 +67,11 @@ class UserController {
     try {
       const { refreshToken } = req.cookies;
       const userData = await userService.refreshToken(refreshToken);
-      res.cookie("refreshToken", userData.refreshToken, {
+      res.cookie("refreshToken", userData.tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-      return res.json(userData);
+      return res.json({ payload: userData });
     } catch (e) {
       next(e);
     }

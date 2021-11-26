@@ -5,8 +5,8 @@ import userController from "../../controllers/userController";
 const router = Router();
 router.post(
   "/registration",
-  body("email").isEmail(),
-  body("password").isLength({ min: 3, max: 32 }),
+  // body("email").isEmail(),
+  // body("password").isLength({ min: 3, max: 32 }),
   userController.userRegistration
 );
 router.post("/login", userController.userAuthorization);

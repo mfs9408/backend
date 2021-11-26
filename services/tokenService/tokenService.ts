@@ -3,7 +3,7 @@ import tokenModel from "../../models/tokenModel";
 import { ModelInterface } from "../../types";
 
 class TokenService {
-  generateTokens({ email, nickname, role }: ModelInterface) {
+  async generateTokens({ email, nickname, role }: ModelInterface) {
     const rolesForToken = () => role.reduce((acc, role) => acc + role);
 
     const accessToken = jwt.sign(
