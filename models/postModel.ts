@@ -5,7 +5,7 @@ const author = new Schema(
     author: { type: String, required: true, _id: false },
     userId: { type: Schema.Types.ObjectId, ref: "User", _id: false },
   },
-  { _id: false }
+  { _id: true }
 );
 
 const PostModel = new Schema({

@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import PostModel from "../../models/postModel";
 import imageSaver from "./helpers";
-import { PostInterface, FindingInterface } from "../../types";
+import { FindingInterface, PostInterface } from "../../types";
 
 class PostService {
   async createNewPost(
@@ -38,14 +38,14 @@ class PostService {
 
   async getAllPosts(page: string) {
     const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
-    return await PostModel.find().skip(skipPosts).limit(10);
+    return PostModel.find().skip(skipPosts).limit(10);
   }
 
   async findPosts({ nickname, keyWords, rating, period }: FindingInterface) {
     return PostModel.find({
       $and: [
-        {"user.author": {$regex: nickname, $options: "i"}},
-        {title: {$regex: keyWords, $options: "i"}},
+        { "user.author": { $regex: nickname, $options: "i" } },
+        { title: { $regex: keyWords, $options: "i" } },
         // { content: { $regex: keyWords, $options: "i" } },    Will be added later.
         // { rating: { $regex: rating, $options: "i" } },
         // { creatingDate: period },
@@ -54,12 +54,16 @@ class PostService {
   }
 
   async getMyPosts(userId: string) {
-    return PostModel.find({ userId: new ObjectId(userId) });
+    return PostModel.find({
+      "user.userId": userId,
+    });
   }
 
   async getPost(id: string) {
-    return PostModel.find({ _id: new ObjectId(id) });
+    return PostModel.find({_id: new ObjectId(id)});
   }
+
+  async changeRating(rating: number, postId: string, userId: string) {}
 }
 
 export default new PostService();

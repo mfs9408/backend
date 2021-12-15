@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import ApiError from "../../errors/ApiErrors";
 import userService from "../../services/userService/userService";
 
@@ -36,7 +36,7 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-      return res.json(userData);
+      return res.json({ payload: userData });
     } catch (e) {
       next(e);
     }

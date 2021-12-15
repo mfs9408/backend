@@ -38,7 +38,7 @@ class PostController {
     try {
       const page = req.params.page;
       const allPosts = await PostService.getAllPosts(page);
-      return res.json(allPosts);
+      return res.json({ payload: allPosts });
     } catch (e) {
       next(e);
     }
@@ -56,9 +56,9 @@ class PostController {
 
   async getMyPosts(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.body.payload;
+      const { userId } = req.body;
       const posts = await PostService.getMyPosts(userId);
-      return res.json(posts);
+      return res.json({ payload: posts });
     } catch (e) {
       next(e);
     }
@@ -68,7 +68,17 @@ class PostController {
     try {
       const id = req.params.id;
       const post = await PostService.getPost(id);
-      return res.json(post);
+      return res.json({ payload: post[0] });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async changeRating(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { rating, postId, userId } = req.body;
+      const rateNumber = await PostService.changeRating(rating, postId, userId);
+      return res.json({ rating: rateNumber });
     } catch (e) {
       next(e);
     }
