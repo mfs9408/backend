@@ -1,11 +1,19 @@
 import RatingModel from "../../models/ratingModel";
 import PostModel from "../../models/postModel";
 
+interface UsersVoiceInterface {
+  _id: string;
+  userId: string;
+  postId: string;
+  rate: number;
+  __v: number;
+}
+
 export const updateRating = async (
   rating: number,
   postId: string,
   userId: string,
-  usersVoice: number
+  usersVoice: UsersVoiceInterface
 ) => {
   if (rating === 0) {
     await RatingModel.findOneAndUpdate(
@@ -21,13 +29,11 @@ export const updateRating = async (
         _id: postId,
       },
       {
-        $inc: { rating: -usersVoice },
+        $inc: { rating: -usersVoice.rate },
       },
       { new: true }
     );
-  }
-
-  if (usersVoice && usersVoice === rating) {
+  } else if (usersVoice && usersVoice.rate === rating) {
     await RatingModel.findOneAndUpdate(
       { postId: postId },
       {
@@ -45,9 +51,7 @@ export const updateRating = async (
       },
       { new: true }
     );
-  }
-
-  if (usersVoice) {
+  } else if (usersVoice) {
     await RatingModel.findOneAndUpdate(
       { postId: postId },
       {
@@ -67,9 +71,19 @@ export const updateRating = async (
     );
   }
 
-  return await RatingModel.create({
+  await RatingModel.create({
     rate: rating,
     postId: postId,
     userId: userId,
   });
+
+  return PostModel.findOneAndUpdate(
+    {
+      _id: postId,
+    },
+    {
+      $inc: { rating: rating },
+    },
+    { new: true }
+  );
 };

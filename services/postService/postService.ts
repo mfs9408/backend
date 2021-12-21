@@ -102,7 +102,7 @@ class PostService {
       postId: postId,
     });
 
-    return updateRating(rating, postId, userId, usersVoice.rate);
+    return await updateRating(rating, postId, userId, usersVoice);
   }
 }
 
