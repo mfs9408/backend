@@ -5,6 +5,7 @@ interface PostInterface {
   creatingDate?: string;
   rating?: number;
   content?: [itemInterface];
+  usersScore?: number | undefined;
 }
 
 interface AuthorInterface {

@@ -44,6 +44,21 @@ class PostController {
     }
   }
 
+  async getAllPostsForAuthUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const page = req.params.page;
+      const userId = req.body.userId;
+      const allPosts = await PostService.getAllPostsForAuthUser(page, userId);
+      return res.json({ payload: allPosts });
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async findPosts(req: Request, res: Response, next: NextFunction) {
     try {
       const { payload } = req.body;
