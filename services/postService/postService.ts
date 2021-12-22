@@ -68,7 +68,7 @@ class PostService {
             creatingDate,
             rating,
             user,
-            usersScore: usersScore?.rate,
+            usersScore: usersScore?.rate | 0,
           };
         }
       )
@@ -88,9 +88,36 @@ class PostService {
   }
 
   async getMyPosts(userId: string) {
-    return PostModel.find({
+    const posts = await PostModel.find({
       "user.userId": userId,
     });
+
+    return Promise.all(
+      posts.map(
+        async ({
+          _id,
+          title,
+          content,
+          creatingDate,
+          rating,
+          user,
+        }: PostInterface) => {
+          const usersScore = await RatingModel.findOne({
+            $and: [{ userId: userId, postId: _id }],
+          });
+
+          return {
+            _id,
+            title,
+            content,
+            creatingDate,
+            rating,
+            user,
+            usersScore: usersScore?.rate | 0,
+          };
+        }
+      )
+    );
   }
 
   async getPost(id: string) {
@@ -102,7 +129,7 @@ class PostService {
       postId: postId,
     });
 
-    return await updateRating(rating, postId, userId, usersVoice);
+    return { payload: await updateRating(rating, postId, userId, usersVoice) };
   }
 }
 

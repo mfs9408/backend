@@ -93,7 +93,7 @@ class PostController {
     try {
       const { rating, postId, userId } = req.body;
       const rateNumber = await PostService.changeRating(rating, postId, userId);
-      return res.json({ rating: rateNumber });
+      return res.json(rateNumber);
     } catch (e) {
       next(e);
     }
