@@ -1,5 +1,6 @@
 import RatingModel from "../../models/ratingModel";
 import PostModel from "../../models/postModel";
+import { PostInterface } from "../../types";
 
 interface UsersVoiceInterface {
   _id: string;
@@ -9,7 +10,7 @@ interface UsersVoiceInterface {
   __v: number;
 }
 
-export const updateRating = async (
+const updateRating = async (
   rating: number,
   postId: string,
   userId: string,
@@ -87,3 +88,52 @@ export const updateRating = async (
     { new: true }
   );
 };
+
+const postsDestructor = (posts: PostInterface[], userId: string) =>
+  posts.map(
+    async ({
+      _id,
+      title,
+      content,
+      creatingDate,
+      rating,
+      user,
+    }: PostInterface) => {
+      const usersScore = await RatingModel.findOne({
+        $and: [{ userId: userId, postId: _id }],
+      });
+
+      return {
+        _id,
+        title,
+        content,
+        creatingDate,
+        rating,
+        user,
+        usersScore: usersScore?.rate | 0,
+      };
+    }
+  );
+
+const postDestructor = async (
+  postId: string,
+  userId: string,
+  post: PostInterface
+) => {
+  const { _id, title, content, creatingDate, rating, user } = post;
+  const usersScore = await RatingModel.findOne({
+    $and: [{ userId: userId, postId: postId }],
+  });
+
+  return {
+    _id,
+    title,
+    content,
+    creatingDate,
+    rating,
+    user,
+    usersScore: usersScore?.rate | 0,
+  };
+};
+
+export { updateRating, postsDestructor, postDestructor };

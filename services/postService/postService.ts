@@ -3,7 +3,7 @@ import PostModel from "../../models/postModel";
 import RatingModel from "../../models/ratingModel";
 import imageSaver from "./helpers";
 import { FindingInterface, PostInterface } from "../../types";
-import { updateRating } from "./helper";
+import { postDestructor, postsDestructor, updateRating } from "./helper";
 
 class PostService {
   async createNewPost(
@@ -92,36 +92,13 @@ class PostService {
       "user.userId": userId,
     });
 
-    return Promise.all(
-      posts.map(
-        async ({
-          _id,
-          title,
-          content,
-          creatingDate,
-          rating,
-          user,
-        }: PostInterface) => {
-          const usersScore = await RatingModel.findOne({
-            $and: [{ userId: userId, postId: _id }],
-          });
-
-          return {
-            _id,
-            title,
-            content,
-            creatingDate,
-            rating,
-            user,
-            usersScore: usersScore?.rate | 0,
-          };
-        }
-      )
-    );
+    return Promise.all(postsDestructor(posts, userId));
   }
 
-  async getPost(id: string) {
-    return PostModel.find({ _id: new ObjectId(id) });
+  async getPost(postId: string, userId: string) {
+    const post = await PostModel.findOne({ _id: new ObjectId(postId) });
+
+    return postDestructor(postId, userId, post);
   }
 
   async changeRating(rating: number, postId: string, userId: string) {

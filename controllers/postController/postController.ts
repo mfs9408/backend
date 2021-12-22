@@ -63,7 +63,7 @@ class PostController {
     try {
       const { payload } = req.body;
       const foundPosts = await PostService.findPosts(payload);
-      return res.json(foundPosts);
+      return res.json({ payload: foundPosts });
     } catch (e) {
       next(e);
     }
@@ -81,9 +81,10 @@ class PostController {
 
   async getPost(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id;
-      const post = await PostService.getPost(id);
-      return res.json({ payload: post[0] });
+      const postId = req.params.id;
+      const { userId } = req.body;
+      const post = await PostService.getPost(postId, userId);
+      return res.json({ payload: post });
     } catch (e) {
       next(e);
     }
