@@ -5,10 +5,10 @@ class PostController {
   async createNewPost(req: Request, res: Response, next: NextFunction) {
     try {
       const { payload } = req.body;
-      const { img } = req.files;
+      const img = req.files?.img;
 
-      const newPost = await PostService.createNewPost(payload, img);
-      return res.json(newPost);
+      await PostService.createNewPost(payload, img);
+      return res.json({ payload: "success" });
     } catch (e) {
       next(e);
     }

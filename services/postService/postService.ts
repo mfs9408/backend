@@ -47,32 +47,7 @@ class PostService {
     const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
     const posts = await PostModel.find().skip(skipPosts).limit(10);
 
-    return Promise.all(
-      posts.map(
-        async ({
-          _id,
-          title,
-          content,
-          creatingDate,
-          rating,
-          user,
-        }: PostInterface) => {
-          const usersScore = await RatingModel.findOne({
-            $and: [{ userId: userId, postId: _id }],
-          });
-
-          return {
-            _id,
-            title,
-            content,
-            creatingDate,
-            rating,
-            user,
-            usersScore: usersScore?.rate | 0,
-          };
-        }
-      )
-    );
+    return Promise.all(postsDestructor(posts, userId).reverse());
   }
 
   async findPosts({ nickname, keyWords, rating, period }: FindingInterface) {
@@ -92,7 +67,7 @@ class PostService {
       "user.userId": userId,
     });
 
-    return Promise.all(postsDestructor(posts, userId));
+    return Promise.all(postsDestructor(posts, userId).reverse());
   }
 
   async getPost(postId: string, userId: string) {
