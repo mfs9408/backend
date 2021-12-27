@@ -50,15 +50,13 @@ class PostService {
     );
   }
 
-  async getAllPosts(page: string) {
-    const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
-    return PostModel.find().skip(skipPosts).limit(10);
-  }
-
   async getAllPostsForAuthUser(page: string, userId: string) {
     const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
-    const posts = await PostModel.find().skip(skipPosts).limit(10);
-    return Promise.all(postsDestructor(posts, userId).reverse());
+    const posts = await PostModel.find()
+      .sort({ creatingDate: -1 })
+      .skip(skipPosts)
+      .limit(10);
+    return Promise.all(postsDestructor(posts, userId));
   }
 
   async findPosts({ nickname, keyWords, rating, period }: FindingInterface) {
