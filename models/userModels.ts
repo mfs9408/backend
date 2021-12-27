@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
   role: { type: Array, default: "user" },
-  avatar: { type: String, default: "defaultAvatar.jpeg" },
+  avatar: { type: String, default: "picture.jpeg" },
 });
 
 export default model("User", UserSchema);

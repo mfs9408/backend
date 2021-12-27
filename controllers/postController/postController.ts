@@ -4,10 +4,9 @@ import PostService from "../../services/postService";
 class PostController {
   async createNewPost(req: Request, res: Response, next: NextFunction) {
     try {
-      const { payload } = req.body;
-      const img = req.files?.img;
-
-      await PostService.createNewPost(payload, img);
+      const { post } = req.body;
+      const img = req.files;
+      await PostService.createNewPost(JSON.parse(post), img);
       return res.json({ payload: "success" });
     } catch (e) {
       next(e);
@@ -29,16 +28,6 @@ class PostController {
       const { id } = req.body.payload;
       const deletedPost = await PostService.deletePost(id);
       return res.json(deletedPost);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async getAllPosts(req: Request, res: Response, next: NextFunction) {
-    try {
-      const page = req.params.page;
-      const allPosts = await PostService.getAllPosts(page);
-      return res.json({ payload: allPosts });
     } catch (e) {
       next(e);
     }

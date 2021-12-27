@@ -1,6 +1,6 @@
 interface PostInterface {
-  _id?: string;
-  user?: AuthorInterface;
+  id?: string;
+  user?: UserInterface;
   title?: string;
   creatingDate?: string;
   rating?: number;
@@ -8,13 +8,15 @@ interface PostInterface {
   usersScore?: number | undefined;
 }
 
-interface AuthorInterface {
-  author: string;
+interface UserInterface {
+  nickname: string;
   userId: string;
 }
 
 interface itemInterface {
-  item: string;
+  type: string;
+  value: string;
+  id: string;
 }
 
 interface FindingInterface {
@@ -40,6 +42,7 @@ interface ModelInterface {
   id?: string;
   role: [string];
   nickname?: string;
+  isActivated: boolean;
 }
 
 export {

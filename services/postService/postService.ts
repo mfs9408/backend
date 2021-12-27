@@ -1,29 +1,41 @@
 import { ObjectId } from "mongodb";
+import { v4 as uuidv4 } from "uuid";
 import PostModel from "../../models/postModel";
 import RatingModel from "../../models/ratingModel";
 import imageSaver from "./helpers";
 import { FindingInterface, PostInterface } from "../../types";
 import { postDestructor, postsDestructor, updateRating } from "./helper";
+import { FileArray } from "express-fileupload";
 
 class PostService {
   async createNewPost(
-    { user, creatingDate, rating, content, title }: PostInterface,
-    img?: any
+    { user, creatingDate, content, title }: PostInterface,
+    img?: FileArray
   ) {
-    if (img) imageSaver(img, user.author);
+    const postId = uuidv4();
 
     return await PostModel.create({
-      user: { author: user.author, userId: new ObjectId(user.userId) },
+      id: postId,
+      user: { nickname: user.nickname, userId: new ObjectId(user.userId) },
       title: title,
-      content: content,
+      content: content.map(({ id, type, value }) => {
+        if (type === "img" && img) {
+          const name = `${uuidv4()}.jpeg`;
+          imageSaver(img[value], postId, name);
+          return { id, type, value: name };
+        }
+        if (type === "string") {
+          return { id, type, value };
+        }
+        return null;
+      }),
       creatingDate: creatingDate,
-      rating: rating,
     });
   }
 
-  async editPost({ _id, title, content }: PostInterface) {
+  async editPost({ id, title, content }: PostInterface) {
     return PostModel.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { id: id },
       { title: title, content: content },
       { new: true }
     );
@@ -32,7 +44,7 @@ class PostService {
   async deletePost(id: string) {
     return PostModel.findByIdAndDelete(
       {
-        _id: new ObjectId(id),
+        id: new ObjectId(id),
       },
       { new: true }
     );
@@ -46,14 +58,13 @@ class PostService {
   async getAllPostsForAuthUser(page: string, userId: string) {
     const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
     const posts = await PostModel.find().skip(skipPosts).limit(10);
-
     return Promise.all(postsDestructor(posts, userId).reverse());
   }
 
   async findPosts({ nickname, keyWords, rating, period }: FindingInterface) {
     return PostModel.find({
       $and: [
-        { "user.author": { $regex: nickname, $options: "i" } },
+        { "user.nickname": { $regex: nickname, $options: "i" } },
         { title: { $regex: keyWords, $options: "i" } },
         // { content: { $regex: keyWords, $options: "i" } },    Will be added later.
         // { rating: { $regex: rating, $options: "i" } },
@@ -71,7 +82,7 @@ class PostService {
   }
 
   async getPost(postId: string, userId: string) {
-    const post = await PostModel.findOne({ _id: new ObjectId(postId) });
+    const post = await PostModel.findOne({ id: postId });
 
     return postDestructor(postId, userId, post);
   }

@@ -1,21 +1,30 @@
 import path from "path";
 const fs = require("fs");
 
-const imageSaver = (img: [any] | any, user: string) => {
-  if (!fs.state(`../../static/postPictures/${user}`)) {
-    fs.mkdir(`../../static/postPictures/${user}`);
-  }
+const imageSaver = async (img: any, postId: any, name: string) => {
+  const pathFolder = `../../static/postPictures/`;
 
-  if (Array.isArray(img)) {
-    return img.map((image: any) => {
-      image.mv(
-        path.resolve(__dirname, "../../static", "postPictures", image.name)
-      );
-    });
+  if (!fs.existsSync(pathFolder + `${postId}`)) {
+    fs.mkdir(
+      path.join(__dirname, pathFolder, postId),
+      (err: any, stat: any) => {
+        if (err) {
+          console.log(err, "ошибка");
+        }
+        console.log(stat, "нет ошибок");
+      }
+    );
   }
 
   return img.mv(
-    path.resolve(__dirname, "../../static", "postPictures", img.name)
+    path.resolve(__dirname, pathFolder + postId, name),
+    (err: any, stat: any) => {
+      if (err) {
+        console.log(err, "ошибка2");
+      }
+      console.log(stat, "нет ошибок2");
+    }
   );
 };
+
 export default imageSaver;

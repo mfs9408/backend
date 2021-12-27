@@ -5,11 +5,13 @@ export default class UserDto {
   id: string;
   role: [string];
   nickname: string;
+  isActivated: boolean;
 
-  constructor({ email, id, role, nickname }: ModelInterface) {
+  constructor({ email, id, role, nickname, isActivated }: ModelInterface) {
     this.email = email;
     this.id = id;
     this.role = role;
     this.nickname = nickname;
+    this.isActivated = isActivated;
   }
 }

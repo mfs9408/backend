@@ -27,7 +27,7 @@ const updateRating = async (
 
     return PostModel.findOneAndUpdate(
       {
-        _id: postId,
+        id: postId,
       },
       {
         $inc: { rating: -usersVoice.rate },
@@ -45,7 +45,7 @@ const updateRating = async (
 
     return PostModel.findOneAndUpdate(
       {
-        _id: postId,
+        id: postId,
       },
       {
         $inc: { rating: -rating },
@@ -63,7 +63,7 @@ const updateRating = async (
 
     return PostModel.findOneAndUpdate(
       {
-        _id: postId,
+        id: postId,
       },
       {
         $inc: { rating: rating },
@@ -80,7 +80,7 @@ const updateRating = async (
 
   return PostModel.findOneAndUpdate(
     {
-      _id: postId,
+      id: postId,
     },
     {
       $inc: { rating: rating },
@@ -92,7 +92,7 @@ const updateRating = async (
 const postsDestructor = (posts: PostInterface[], userId: string) =>
   posts.map(
     async ({
-      _id,
+      id,
       title,
       content,
       creatingDate,
@@ -100,11 +100,11 @@ const postsDestructor = (posts: PostInterface[], userId: string) =>
       user,
     }: PostInterface) => {
       const usersScore = await RatingModel.findOne({
-        $and: [{ userId: userId, postId: _id }],
+        $and: [{ userId: userId, postId: id }],
       });
 
       return {
-        _id,
+        id,
         title,
         content,
         creatingDate,
@@ -120,13 +120,13 @@ const postDestructor = async (
   userId: string,
   post: PostInterface
 ) => {
-  const { _id, title, content, creatingDate, rating, user } = post;
+  const { id, title, content, creatingDate, rating, user } = post;
   const usersScore = await RatingModel.findOne({
     $and: [{ userId: userId, postId: postId }],
   });
 
   return {
-    _id,
+    id,
     title,
     content,
     creatingDate,
