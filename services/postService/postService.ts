@@ -19,15 +19,15 @@ class PostService {
       user: { nickname: user.nickname, userId: new ObjectId(user.userId) },
       title: title,
       content: content.map(({ id, type, value }) => {
-        if (type === "img" && img) {
+        if (type === "img" && img && value) {
           const name = `${uuidv4()}.jpeg`;
           imageSaver(img[value], postId, name);
           return { id, type, value: name };
         }
-        if (type === "string") {
+        if (type === "string" && value) {
           return { id, type, value };
         }
-        return null;
+        return { id, type, undefined };
       }),
       creatingDate: creatingDate,
     });
@@ -44,15 +44,21 @@ class PostService {
   async deletePost(id: string) {
     return PostModel.findByIdAndDelete(
       {
-        id: new ObjectId(id),
+        id: id,
       },
       { new: true }
     );
   }
 
-  async getAllPostsForAuthUser(page: string, userId: string) {
+  async getAllPosts(page: string, userId: string, searchValue?: string) {
     const skipPosts = parseInt(page) === 1 ? 0 : parseInt(page + "0") - 10;
-    const posts = await PostModel.find()
+    const posts = await PostModel.find({
+      $or: [
+        { "user.nickname": { $regex: searchValue, $options: "i" } },
+        { title: { $regex: searchValue, $options: "i" } },
+        // { content: { $regex: keyWords, $options: "i" } },    Will be added later.
+      ],
+    })
       .sort({ creatingDate: -1 })
       .skip(skipPosts)
       .limit(10);
