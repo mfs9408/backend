@@ -2,9 +2,9 @@ import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import PostModel from "../../models/postModel";
 import RatingModel from "../../models/ratingModel";
-import imageSaver from "./helpers";
+import { imageSaver, folderRemover } from "./helpers";
 import { FindingInterface, PostInterface } from "../../types";
-import { postDestructor, postsDestructor, updateRating } from "./helper";
+import { postDestructor, postsDestructor, updateRating } from "./imageHelpers";
 import { FileArray } from "express-fileupload";
 
 class PostService {
@@ -42,7 +42,8 @@ class PostService {
   }
 
   async deletePost(id: string) {
-    return PostModel.findByIdAndDelete(
+    await folderRemover(id);
+    return PostModel.findOneAndDelete(
       {
         id: id,
       },
@@ -82,7 +83,7 @@ class PostService {
       "user.userId": userId,
     });
 
-    return Promise.all(postsDestructor(posts, userId).reverse());
+    return Promise.all(postsDestructor(posts, userId, true).reverse());
   }
 
   async getPost(postId: string, userId: string) {

@@ -25,8 +25,8 @@ class PostController {
 
   async deletePost(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.body.payload;
-      const deletedPost = await PostService.deletePost(id);
+      const { postId } = req.body;
+      const deletedPost = await PostService.deletePost(postId);
       return res.json(deletedPost);
     } catch (e) {
       next(e);

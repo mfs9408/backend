@@ -89,7 +89,11 @@ const updateRating = async (
   );
 };
 
-const postsDestructor = (posts: PostInterface[], userId: string) =>
+const postsDestructor = (
+  posts: PostInterface[],
+  userId: string,
+  removable?: boolean
+) =>
   posts.map(
     async ({
       id,
@@ -111,6 +115,7 @@ const postsDestructor = (posts: PostInterface[], userId: string) =>
         rating,
         user,
         usersScore: usersScore?.rate | 0,
+        removable: removable,
       };
     }
   );

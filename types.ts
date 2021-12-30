@@ -1,11 +1,12 @@
 interface PostInterface {
-  id?: string;
+  id?: string | null;
   user?: UserInterface;
   title?: string;
   creatingDate?: string;
   rating?: number;
   content?: [itemInterface];
   usersScore?: number | undefined;
+  removable?: boolean;
 }
 
 interface UserInterface {
