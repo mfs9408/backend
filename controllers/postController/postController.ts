@@ -42,8 +42,15 @@ class PostController {
       const page = req.params.page;
       const userId = req.body.userId;
       const searchValue = req.body.searchValue;
-      const allPosts = await PostService.getAllPosts(page, userId, searchValue);
-      return res.json({ payload: allPosts });
+      const { posts, pageQuantity } = await PostService.getAllPosts(
+        page,
+        userId,
+        searchValue
+      );
+
+      return res.json({
+        payload: { allPosts: posts, pageQuantity: pageQuantity },
+      });
     } catch (e) {
       next(e);
     }

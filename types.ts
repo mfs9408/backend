@@ -40,7 +40,7 @@ interface TokenGeneratorInterface {
 
 interface ModelInterface {
   email: string;
-  id?: string;
+  id: string;
   role: [string];
   nickname?: string;
   isActivated: boolean;

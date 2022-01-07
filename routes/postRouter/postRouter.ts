@@ -8,13 +8,8 @@ router.post("/editpost", authMiddleware, postController.editPost);
 router.post("/deletepost", authMiddleware, postController.deletePost);
 router.post("/myposts", authMiddleware, postController.getMyPosts);
 router.post("/changerate", authMiddleware, postController.changeRating);
-router.post(
-  "/authposts/:page",
-  authMiddleware,
-  postController.getAllPostsForAuthUser
-);
+router.post("/allposts/:page", postController.getAllPostsForAuthUser);
 router.post("/:id", postController.getPost);
 router.post("/find", postController.findPosts);
-// router.get("/:page", postController.getAllPosts);
 
 export default router;

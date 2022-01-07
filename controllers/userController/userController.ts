@@ -35,6 +35,7 @@ class UserController {
       res.cookie("refreshToken", userData.tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        path: "/",
       });
       return res.json({ payload: userData });
     } catch (e) {
@@ -71,13 +72,14 @@ class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
+
       return res.json({ payload: userData });
     } catch (e) {
       next(e);
     }
   }
 
-  async userOptions(req: Request, res: Response, next: NextFunction) {}
+  // async userOptions(req: Request, res: Response, next: NextFunction) {}
 }
 
 export default new UserController();

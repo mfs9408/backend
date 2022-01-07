@@ -3,11 +3,17 @@ import tokenModel from "../../models/tokenModel";
 import { ModelInterface } from "../../types";
 
 class TokenService {
-  async generateTokens({ email, nickname, role }: ModelInterface) {
-    const rolesForToken = () => role.reduce((acc, role) => acc + role);
+  async generateTokens({
+    email,
+    nickname,
+    role,
+    id,
+    isActivated,
+  }: ModelInterface) {
+    const roles = role.reduce((acc, role) => acc + role);
 
     const accessToken = jwt.sign(
-      { email, nickname, rolesForToken },
+      { email, nickname, roles, id, isActivated },
       process.env.JWT_ACCESS_SECRET,
       {
         expiresIn: "12h",
@@ -15,8 +21,8 @@ class TokenService {
     );
 
     const refreshToken = jwt.sign(
-      { email, nickname, rolesForToken },
-      process.env.JWT_ACCESS_SECRET,
+      { email, nickname, roles, id, isActivated },
+      process.env.JWT_REFRESH_SECRET,
       {
         expiresIn: "30d",
       }

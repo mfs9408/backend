@@ -74,15 +74,15 @@ class UserService {
     if (!refreshToken) {
       throw ApiError.unAuthorizedError();
     }
-    const userData = tokenService.validateRefreshToken(refreshToken);
+    const userData = await tokenService.validateRefreshToken(refreshToken);
     const dbToken = tokenService.findToken(refreshToken);
 
     if (!userData || !dbToken) {
       throw ApiError.unAuthorizedError();
     }
 
-    //@ts-ignore TODO доработать типизацию.
-    const user = await UserModel.findById(userData.id);
+    //@ts-ignore
+    const user = await UserModel.findById(userData?.id);
     const userDto = new UserDto(user);
     const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);

@@ -64,7 +64,20 @@ class PostService {
       .sort({ creatingDate: -1 })
       .skip(skipPosts)
       .limit(10);
-    return Promise.all(postsDestructor(posts, userId));
+
+    const pageQuantity =
+      (await PostModel.find({
+        $or: [
+          { "user.nickname": { $regex: searchValue, $options: "i" } },
+          { title: { $regex: searchValue, $options: "i" } },
+          // { content: { $regex: keyWords, $options: "i" } },    Will be added later.
+        ],
+      }).count()) / 10;
+
+    return {
+      pageQuantity: Math.ceil(pageQuantity),
+      posts: await Promise.all(postsDestructor(posts, userId)),
+    };
   }
 
   async findPosts({ nickname, keyWords, rating, period }: FindingInterface) {
