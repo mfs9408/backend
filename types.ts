@@ -1,47 +1,54 @@
-type RegistrationProperty = BaseProperty<
-  RequestRegistration,
-  ResponseRegistration,
-  NextProperty
->;
-
-interface BaseProperty<T, V, R> {
-  req: T;
-  res: V;
-  next: R;
+interface PostInterface {
+  id?: string | null;
+  user?: UserInterface;
+  title?: string;
+  creatingDate?: string;
+  rating?: number;
+  content?: [itemInterface];
+  usersScore?: number | undefined;
+  removable?: boolean;
 }
 
-interface RequestRegistration {
-  body: RequestBodyRegistration;
+interface UserInterface {
+  nickname: string;
+  userId: string;
 }
 
-interface RequestBodyRegistration {
+interface itemInterface {
+  type: string;
+  value: string;
+  id: string;
+}
+
+interface FindingInterface {
+  nickname?: string;
+  keyWords?: string;
+  rating?: number;
+  period?: DateInterface;
+}
+
+interface DateInterface {
+  from: string;
+  to: string;
+}
+
+interface TokenGeneratorInterface {
   email: string;
   nickname: string;
-  password: string;
+  role: [string];
 }
 
-interface ResponseRegistration {
-  json: (arg0: { token: string }) => string;
-  cookie(
-    data: string,
-    refreshToken: string,
-    age: { maxAge: number; httpOnly: boolean }
-  ): void;
+interface ModelInterface {
+  email: string;
+  id: string;
+  role: [string];
+  nickname?: string;
+  isActivated: boolean;
 }
 
-interface NextProperty {
-  next: (text: string) => Next;
-}
-
-type Next = {
-  status: number;
-  message: string;
+export {
+  PostInterface,
+  FindingInterface,
+  TokenGeneratorInterface,
+  ModelInterface,
 };
-
-type activateAccountProperty = BaseProperty<any, any, NextProperty>;
-
-interface Interface {
-  
-}
-
-export { RegistrationProperty };

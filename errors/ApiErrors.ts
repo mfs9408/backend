@@ -1,4 +1,3 @@
-export {};
 class ApiErrors extends Error {
   private status: number;
 
@@ -8,21 +7,21 @@ class ApiErrors extends Error {
     this.message = message;
   }
 
-  static unAuthorizedError(message: string) {
+  static unAuthorizedError(message?: string) {
     return new ApiErrors(401, message);
   }
 
-  static badRequest(message: string) {
+  static badRequest(message?: string) {
     return new ApiErrors(404, message);
   }
 
-  static internal(message: string) {
+  static internal(message?: string) {
     return new ApiErrors(500, message);
   }
 
-  static forbidden(message: string) {
+  static forbidden(message?: string) {
     return new ApiErrors(403, message);
   }
 }
 
-module.exports = ApiErrors;
+export default ApiErrors;

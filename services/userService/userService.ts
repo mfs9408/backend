@@ -1,11 +1,10 @@
-export {};
-const bcrypt = require("bcrypt");
-const { v4: uuidv4 } = require("uuid");
-const UserModel = require("../../models/userModels");
-const MailService = require("../mailService/mailService");
-const tokenService = require("../tokenService/tokenService");
-const UserDto = require("../../dtos/userDto");
-const ApiError = require("../../errors/ApiErrors");
+import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
+import UserModel from "../../models/userModels";
+import MailService from "../mailService";
+import tokenService from "../tokenService";
+import UserDto from "../../dtos/userDto";
+import ApiError from "../../errors/ApiErrors";
 
 class UserService {
   async userRegistration(email: string, nickname: string, password: string) {
@@ -34,10 +33,9 @@ class UserService {
     );
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-    return { ...tokens, user: userDto };
+    return { tokens, user: userDto };
   }
 
   async activateAccount(activationLink: string) {
@@ -62,10 +60,10 @@ class UserService {
     }
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-    return { ...tokens, user: new UserDto(user) };
+    return { tokens, user: new UserDto(user) };
   }
 
   async userLogout(refreshToken: string) {
@@ -76,20 +74,21 @@ class UserService {
     if (!refreshToken) {
       throw ApiError.unAuthorizedError();
     }
-    const userData = tokenService.validateRefreshToken(refreshToken);
+    const userData = await tokenService.validateRefreshToken(refreshToken);
     const dbToken = tokenService.findToken(refreshToken);
 
     if (!userData || !dbToken) {
       throw ApiError.unAuthorizedError();
     }
 
-    const user = await UserModel.findById(userData.id);
+    //@ts-ignore
+    const user = await UserModel.findById(userData?.id);
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens(userDto);
+    const tokens = await tokenService.generateTokens(userDto);
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-    return { ...tokens, user: new UserDto(user) };
+    return { tokens, user: new UserDto(user) };
   }
 }
 
-module.exports = new UserService();
+export default new UserService();

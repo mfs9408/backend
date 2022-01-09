@@ -1,4 +1,3 @@
-export {};
 const nodemailer = require("nodemailer");
 import * as SMTPTransport from "nodemailer/lib/smtp-transport";
 import { Transporter } from "nodemailer";
@@ -31,4 +30,4 @@ class MailService {
   }
 }
 
-module.exports = new MailService();
+export default new MailService();
