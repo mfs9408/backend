@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Fedor's blog",
   "main": "index.ts",
   "scripts": {
@@ -27,6 +28,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "eslint": "5",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-validator": "^6.13.0",
