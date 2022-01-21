@@ -1,5 +1,5 @@
 Arguments: 
-  /opt/homebrew/Cellar/node/17.0.1/bin/node /opt/homebrew/Cellar/yarn/1.22.17/libexec/bin/yarn.js add @types/ express-fileupload
+  /opt/homebrew/Cellar/node@14/14.18.3/bin/node /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js start
 
 PATH: 
   /opt/homebrew/bin:/opt/homebrew/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/fedormuratidi/WebstormProjects/blog/backend/node_modules/.bin
@@ -8,28 +8,24 @@ Yarn version:
   1.22.17
 
 Node version: 
-  17.0.1
+  14.18.3
 
 Platform: 
   darwin arm64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2f: Request "https://registry.yarnpkg.com/@types%2f" returned a 405
-      at Request.params.callback [as _callback] (/opt/homebrew/Cellar/yarn/1.22.17/libexec/lib/cli.js:67038:18)
-      at Request.self.callback (/opt/homebrew/Cellar/yarn/1.22.17/libexec/lib/cli.js:140883:22)
-      at Request.emit (node:events:390:28)
-      at Request.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17/libexec/lib/cli.js:141855:10)
-      at Request.emit (node:events:390:28)
-      at IncomingMessage.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17/libexec/lib/cli.js:141777:12)
-      at Object.onceWrapper (node:events:509:28)
-      at IncomingMessage.emit (node:events:402:35)
-      at endReadableNT (node:internal/streams/readable:1340:12)
-      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+  SyntaxError: /Users/fedormuratidi/WebstormProjects/blog/backend/package.json: Unexpected token / in JSON at position 45
+      at JSON.parse (<anonymous>)
+      at /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:310:30)
+      at /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:321:13
 
 npm manifest: 
   {
     "name": "backend",
     "version": "1.0.0",
+  //  "type": "module",
     "description": "Fedor's blog",
     "main": "index.ts",
     "scripts": {
@@ -56,6 +52,7 @@ npm manifest:
       "cors": "^2.8.5",
       "dotenv": "^10.0.0",
       "eslint": "5",
+      "esm": "^3.2.25",
       "express": "^4.17.1",
       "express-fileupload": "^1.2.1",
       "express-validator": "^6.13.0",
@@ -69,11 +66,9 @@ npm manifest:
       "sequelize": "^6.6.5",
       "ts-node": "^10.1.0",
       "typescript": "^4.3.5",
-      "uuid": "^8.3.2"
-    },
-    "devDependencies": {
-      "@types/nodemon": "^1.19.1",
-      "nodemon": "^2.0.12"
+      "uuid": "^8.3.2",
+      "nodemon": "^2.0.12",
+      "@types/nodemon": "^1.19.1"
     },
     "keywords": [],
     "author": "",
@@ -1039,6 +1034,11 @@ Lockfile:
       strip-json-comments "^2.0.1"
       table "^5.2.3"
       text-table "^0.2.0"
+  
+  esm@^3.2.25:
+    version "3.2.25"
+    resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+    integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
   
   espree@^5.0.1:
     version "5.0.1"
