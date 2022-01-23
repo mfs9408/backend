@@ -72,6 +72,7 @@ class UserController {
       res.cookie("refreshToken", userData.tokens.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        path: "/refresh",
       });
       return res.json({ payload: userData });
     } catch (e) {
