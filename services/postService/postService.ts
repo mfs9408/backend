@@ -13,7 +13,6 @@ class PostService {
     img?: FileArray
   ) {
     const postId = uuidv4();
-
     return await PostModel.create({
       id: postId,
       user: { nickname: user.nickname, userId: new ObjectId(user.userId) },
